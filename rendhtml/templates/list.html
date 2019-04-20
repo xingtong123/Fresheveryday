@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% block title %}天天生鲜-商品列表{% endblock title %}
+{% load static %}
+{% block content %}
+	<div class="navbar_con">
+		<div class="navbar clearfix">
+			<div class="subnav_con fl">
+				<h1>全部商品分类</h1>	
+				<span></span>			
+				<ul class="subnav">
+                    {% for foo in category %}
+                    <li><a href="{% url 'list' %}?cate_id={{ foo.id }}" class="{{ foo.icon }}">{{ foo.name }}</a></li>
+                    {% endfor %}
+				</ul>
+			</div>
+			<ul class="navlist fl">
+				<li><a href="{% url 'index' %}">首页</a></li>
+				<li class="interval">|</li>
+				<li><a href="">手机生鲜</a></li>
+				<li class="interval">|</li>
+				<li><a href="">抽奖</a></li>
+			</ul>
+		</div>
+	</div>
+{#    {% for foo in category %}#}
+	<div class="breadcrumb">
+		<a href="#">全部分类</a>
+		<span>></span>
+		<a href="#">{{ cate.name }}</a>
+	</div>
+	<div class="main_wrap clearfix">
+		<div class="l_wrap fl clearfix">
+			<div class="new_goods">
+				<h3>新品推荐</h3>
+				<ul>
+                    {% for good in recommend|slice:':2' %}
+					<li>
+						<a href="#"><img src="{{ MEDIA_URL }}{{ good.thumb }}"></a>
+						<h4><a href="#">{{ good.name }}</a></h4>
+						<div class="prize">￥{{ good.shop_price }}</div>
+					</li>
+                    {% endfor %}
+{#					<li>#}
+{#						<a href="#"><img src="{% static '' %}images/goods/goods002.jpg"></a>#}
+{#						<h4><a href="#">玫瑰香葡萄</a></h4>#}
+{#						<div class="prize">￥16.80</div>#}
+{#					</li>#}
+				</ul>
+			</div>
+		</div>
+
+		<div class="r_wrap fr clearfix">
+			<div class="sort_bar">
+				<a href="#" class="active">默认</a>
+				<a href="#">价格</a>
+				<a href="#">人气</a>
+			</div>
+			<ul class="goods_type_list clearfix">
+{#                {% for foo in category %}#}
+                {% for child in page.object_list %}
+				<li>
+					<a href="{% url 'detail' %}?goods_id={{ child.id }}">
+                        <img src="{{ MEDIA_URL }}{{ child.thumb }}">
+                    </a>
+					<h4><a href="detail.html">{{ child.name }}</a></h4>
+					<div class="operate">
+						<span class="prize">{{ child.shop_price }}</span>
+						<span class="unit">16.80/500g</span>
+						<a href="{% url 'add_lcart' %}?goods_id={{ child.id }}&number={{ 1 }}" class="add_goods" title="加入购物车"></a>
+					</div>
+				</li>
+                {% endfor %}
+			</ul>
+            <div class="pagenation">
+                {% if page.has_previous %}
+                    <a href="{% url 'list' %}?page={{ page.previous_page_number }}&cate_id={{ cate_id }}">上一页</a>
+                {% endif %}
+                {% for p in page.paginator.page_range %}
+                    <a href="{% url 'list' %}?page={{ p }}&cate_id={{ cate_id }}&keyword={{ keyword }}"
+                    {% ifequal page.number p %}style="border: 2px solid red;"{% endifequal %}>{{ p }}</a>
+                {% endfor %}
+                {% if page.has_next %}
+                    <a href="{% url 'list' %}?page={{ page.next_page_number }}&cate_id={{ cate_id }}">下一页</a>
+                {% endif %}
+            </div>
+		</div>
+	</div>
+    <div class="add_jump"></div>
+{#    <script type="text/javascript" src="{% static 'D:\Gjango\Fresheveryday\js\jquery-1.12.4.min.js' %}"></script>#}
+    <script>
+          $('.add_goods').click(function () {
+                alert('00')
+                $.ajax({
+                    url:'{% url 'add_lcart' %}',
+                    type:'post',
+                    data:$(this).serialize(),
+                    headers: {
+                    'X-CSRFTOKEN': $.cookie('csrftoken')
+                    },
+                    success:function (res) {
+                        if(res.ok==1){
+                            alert(res.message)
+                        }else{
+                            alert(res.message)
+                            location.assign('{% url 'login' %}')
+                        }
+                    }
+                })
+                return false
+          })
+
+
+          $(".add_jump").css({'left':$add_y+80,'top':$add_x+10,'display':'block'})
+          $('.add_goods').mousedown(function(){
+                $(".add_jump").stop().animate({
+                    'left': $to_y+7,
+                    'top': $to_x+7},
+                    "fast", function() {
+                    $(".add_jump").fadeOut('fast',function(){
+                        $('#show_count').html(2);
+                    });
+          });
+          })
+    </script>
+{#    {% endfor %}#}
+{% endblock %}
+

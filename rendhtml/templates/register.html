@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    {% load static %}
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<title>天天生鲜-注册</title>
+{#	<link rel="stylesheet" type="text/css" href="css/reset.css">#}
+{#	<link rel="stylesheet" type="text/css" href="css/main.css">#}
+    <link href="{% static 'base.css' %}" rel="stylesheet">
+    <link href="{% static 'reset.css' %}" rel="stylesheet">
+    <link href="{% static 'index.css' %}" rel="stylesheet">
+	<script type="text/javascript" src="{% static 'js/jquery-1.12.4.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/register.js' %}"></script>
+    <script src="{% static 'js/register.js' %}"></script>
+</head>
+<body>
+	<div class="register_con">
+		<div class="l_con fl">
+			<a href="{% url 'index' %}" class="reg_logo"><img src="{% static '' %}images/logo02.png"></a>
+			<div class="reg_slogan">足不出户  ·  新鲜每一天</div>
+			<div class="reg_banner"></div>
+		</div>
+
+		<div class="r_con fr">
+			<div class="reg_title clearfix">
+				<h1>用户注册</h1>
+				<a href="{% url 'login' %}">登录</a>
+			</div>
+			<div class="reg_form clearfix">
+				<form action="{% url 'register' %}" method="post" id="regform">
+                {% csrf_token %}
+				<ul>
+					<li>
+						<label>用户名:</label>
+						<input type="text" name="username" id="user_name">
+						<span id='user' class="error_tip">{{ form.username.errors }}</span>
+					</li>					
+					<li>
+						<label>密码:</label>
+						<input type="password" name="password1" id="pwd">
+						<span id='pass' class="error_tip">{{ form.password1.errors }}</span>
+					</li>
+					<li>
+						<label>确认密码:</label>
+						<input type="password" name="password2" id="cpwd">
+						<span id='pass1' class="error_tip">{{ form.password2.errors }}</span>
+					</li>
+					<li>
+						<label>邮箱:</label>
+						<input type="text" name="email" id="email">
+						<span class="error_tip">{{ form.email.errors }}</span>
+					</li>
+					<li class="agreement">
+						<input type="checkbox" name="allow" id="allow" checked="checked">
+						<label>同意”天天生鲜用户使用协议“</label>
+						<span class="error_tip2">提示信息</span>
+					</li>
+					<li class="reg_sub">
+						<input type="submit" id="order_btn" value="注 册" name="">
+					</li>
+				</ul>				
+				</form>
+			</div>
+
+		</div>
+
+	</div>
+
+	<div class="footer no-mp">
+		<div class="foot_link">
+			<a href="#">关于我们</a>
+			<span>|</span>
+			<a href="#">联系我们</a>
+			<span>|</span>
+			<a href="#">招聘人才</a>
+			<span>|</span>
+			<a href="#">友情链接</a>		
+		</div>
+		<p>CopyRight © 2016 北京天天生鲜信息技术有限公司 All Rights Reserved</p>
+		<p>电话：010-****888    京ICP备*******8号</p>
+	</div>
+    <div class="popup_con" id="ddd">
+		<div class="popup">
+			<p>注册成功！</p>
+		</div>
+		<div class="mask"></div>
+	</div>
+    <div class="popup_con" id="ccc">
+		<div class="popup">
+			<p>请输入正确的信息格式！</p>
+{#            <p>{{ form.error_messages.password_mismatch }}</p>#}
+		</div>
+		<div class="mask"></div>
+	</div>
+    <script type="text/javascript" src="{% static 'js\jquery-1.12.4.min.js' %}"></script>
+    <script type="text/javascript">
+        $('#regform').submit(function () {
+            $.ajax({
+                url:'{% url 'register' %}',
+                type:'post',
+                data:$(this).serialize(),
+                success:function (res) {
+                    console.log(res)
+                    {#alert('请输入正确的用户名和密码!')#}
+                    if(res.ok){
+                        $('#ddd').fadeIn('fast', function() {
+                            setTimeout(function(){
+                                $('#ddd').fadeOut('fast',function(){
+                                    window.location.href = '{% url 'login' %}';
+                                });
+                            },500)
+
+                        });
+                    }else{
+                        $('#ccc').fadeIn('fast', function() {
+                            setTimeout(function(){
+                                $('#ccc').fadeOut('fast',function(){
+                                    {#window.location.href = '{% url 'index' %}';#}
+                                });
+                            },1000)
+
+                         });
+                        {# $('#user').html(res.error.username)#}
+                        {# $('#pass1').html(res.error.password1)#}
+                        {# $('#pass2').html(res.error.password2)#}
+                        {# $('#email').html(res.error.email)#}
+                        {# $('#pass2').html(res.error.password2)#}
+
+
+
+                    }
+                }
+            })
+            {#要阻止要阻止要阻止#}
+            return false
+        })
+	</script>
+
+	
+</body>
+</html>

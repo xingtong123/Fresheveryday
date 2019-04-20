@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+{% block title %}天天生鲜-商品详情{% endblock title %}
+{% load static %}
+{% block content %}
+	<div class="navbar_con">
+		<div class="navbar clearfix">
+			<div class="subnav_con fl">
+				<h1>全部商品分类</h1>	
+				<span></span>			
+				<ul class="subnav">
+                    {% for foo in category %}
+                    <li><a href="{% url 'list' %}?cate_id={{ foo.id }}" class="{{ foo.icon }}">{{ foo.name }}</a></li>
+                    {% endfor %}
+				</ul>
+			</div>
+			<ul class="navlist fl">
+				<li><a href="{% url 'index' %}">首页</a></li>
+				<li class="interval">|</li>
+				<li><a href="">手机生鲜</a></li>
+				<li class="interval">|</li>
+				<li><a href="">抽奖</a></li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="breadcrumb">
+		<a href="#">全部分类</a>
+		<span>></span>
+		<a href="#">{{ goods.category.name }}</a>
+		<span>></span>
+		<a href="#">商品详情</a>
+	</div>
+{#    {% for good in goods %}#}
+	<div class="goods_detail_con clearfix">
+		<div class="goods_detail_pic fl">
+            <img src="{{ MEDIA_URL }}{{ goods.thumb }}" style="display:inline-block ;width: 350px;height: 350px">
+        </div>
+
+		<div class="goods_detail_list fr">
+			<h3>{{ goods.name }}</h3>
+			<p>{{ goods.brief }}</p>
+			<div class="prize_bar">
+                <span class="show_pirze">¥<em id="show_pirzes">{{ goods.shop_price }}</em></span>
+				<span class="show_unit">单  位：500g</span>
+			</div>
+			<div class="goods_num clearfix">
+				<div class="num_name fl">数 量：</div>
+				<div class="num_add fl">
+					<input type="text" id="num_show" class="num_show fl" value="1">
+					<a href="javascript:;" class="add fr bt-shu">+</a>
+					<a href="javascript:;" class="minus fr bt-shu">-</a>
+				</div> 
+			</div>
+            <div class="total">总价：<em id="totals">{{ goods.shop_price }}</em></div>
+			<div class="operate_btn">
+{#                <form action="{% url 'cart' %}" method="post">#}
+                    <a href="javascript:;" class="buy_btn">立即购买</a>
+                    <a href="{% url 'detail' %}?goods_id={{ goods.id }}" class="add_cart" id="add_cart">加入购物车</a>
+{#                </form>#}
+			</div>
+		</div>
+	</div>
+
+	<div class="main_wrap clearfix">
+		<div class="l_wrap fl clearfix">
+			<div class="new_goods">
+				<h3>新品推荐</h3>
+				<ul>
+                    {% for good in recommend|slice:':2' %}
+					<li>
+						<a href="#"><img src="{{ MEDIA_URL }}{{ good.thumb }}"></a>
+						<h4><a href="#">进口柠檬</a></h4>
+						<div class="prize">￥3.90</div>
+					</li>
+                    {% endfor %}
+
+{#					<li>#}
+{#						<a href="#"><img src="{% static '' %}images/goods/goods002.jpg"></a>#}
+{#						<h4><a href="#">玫瑰香葡萄</a></h4>#}
+{#						<div class="prize">￥16.80</div>#}
+{#					</li>#}
+				</ul>
+			</div>
+		</div>
+
+		<div class="r_wrap fr clearfix">
+			<ul class="detail_tab clearfix">
+				<li class="active">商品介绍</li>
+				<li>评论</li>
+			</ul>
+
+			<div class="tab_content">
+				<dl>
+					<dt>商品详情：</dt>
+{#					<dd>草莓采摘园位于北京大兴区 庞各庄镇四各庄村 ，每年1月-6月面向北京以及周围城市提供新鲜草莓采摘和精品礼盒装草莓，草莓品种多样丰富，个大香甜。所有草莓均严格按照有机标准培育，不使用任何化肥和农药。草莓在采摘期间免洗可以直接食用。欢迎喜欢草莓的市民前来采摘，也欢迎各大单位选购精品有机草莓礼盒，有机草莓礼盒是亲朋馈赠、福利送礼的最佳选择。 </dd>#}
+                    <dd>{{ goods.brief }}</dd>
+				</dl>
+			</div>
+
+		</div>
+	</div>
+{#    {% endfor %}#}
+    <div class="add_jump"></div>
+{#	<script type="text/javascript" src="js/jquery-1.12.2.js"></script>#}
+	<script type="text/javascript">
+		var $add_x = $('#add_cart').offset().top;
+		var $add_y = $('#add_cart').offset().left;
+
+		var $to_x = $('#show_count').offset().top;
+		var $to_y = $('#show_count').offset().left;
+
+
+
+
+        $(".bt-shu").click(function(){
+            let number=$(this).siblings(".num_show")
+            if($(this).hasClass("add")){
+                 num=number.val(Number(number.val())+1)
+            }else{Number(number.val())>0?
+                 num=number.val(Number(number.val())-1):null
+            }
+            var sum=$(this).parent().parent().next().children()
+            var un_price=$(this).parent().parent().prev().find('#show_pirzes')
+            sum.text((Number(number.val())*Number(un_price.text())).toFixed(2))
+        })
+
+
+
+
+        $('#add_cart').click(function () {
+            $.ajax({
+                url:'{% url 'add_cart' %}',
+                type:'post',
+                data: {
+                    goods_id:'{{ goods.id }}',
+                    number: $('#num_show').val()
+                },
+                headers: {
+                'X-CSRFTOKEN': $.cookie('csrftoken')
+                },
+                success:function (res) {
+                    if(res.ok==1){
+                        alert(res.message)
+                    }else{
+                        alert(res.message)
+                        location.assign('{% url 'login' %}')
+                    }
+                }
+            })
+            return false
+         } )
+
+
+
+
+		$(".add_jump").css({'left':$add_y+80,'top':$add_x+10,'display':'block'})
+		$('#add_cart').mousedown(function(){
+			$(".add_jump").stop().animate({
+				'left': $to_y+7,
+				'top': $to_x+7},
+				"fast", function() {
+					$(".add_jump").fadeOut('fast',function(){
+						$('#show_count').text(Number($('#show_count').text())+Number($('.num_show').val()));
+					});
+			});
+		})
+	</script>
+{% endblock %}

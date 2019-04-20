@@ -1,0 +1,105 @@
+{% extends 'base1.html' %}
+{% block title %}天天生鲜-提交订单{% endblock title %}
+{% load static %}
+{% block content %}
+	<h3 class="common_title">确认收货地址</h3>
+	<div class="common_list_con clearfix">
+		<dl>
+			<dt>寄送到：</dt>
+			<dd><input type="radio" name="" checked="">北京市 海淀区 东北旺西路8号中关村软件园 （李思 收） 182****7528</dd>
+		</dl>
+		<a href="{% url 'user_center_site' %}" class="edit_site">编辑收货地址</a>
+	</div>
+	<h3 class="common_title">支付方式</h3>	
+	<div class="common_list_con clearfix">
+		<div class="pay_style_con clearfix">
+			<input type="radio" name="pay_style" id="h">
+			<label class="cash" for="h">货到付款</label>
+			<input type="radio" name="pay_style" id="w" checked>
+			<label class="weixin" for="w">微信支付</label>
+			<input type="radio" name="pay_style" id="z">
+			<label class="zhifubao" for="z"></label>
+			<input type="radio" name="pay_style" id="y">
+			<label class="bank" for="y">银行卡支付</label>
+		</div>
+	</div>
+	<h3 class="common_title">商品列表</h3>
+	<div class="common_list_con clearfix">
+		<ul class="goods_list_th clearfix">
+			<li class="col01">商品名称</li>
+			<li class="col02">商品单位</li>
+			<li class="col03">商品价格</li>
+			<li class="col04">数量</li>
+			<li class="col05">小计</li>		
+		</ul>
+
+
+        {% for foo in cart %}
+		<ul class="goods_list_td clearfix" data-id="{{ foo.id }}">
+			<li class="col01">{{ foo.goods.id }}</li>
+			<li class="col02"><img src="{{ MEDIA_URL }}{{ foo.goods.thumb }}"></li>
+			<li class="col03">奇异果</li>
+			<li class="col04">500g</li>
+			<li class="col05"><span id="co105">{{ foo.goods.shop_price }}</span>元</li>
+
+			<li class="col06">{{ foo.number }}</li>
+
+			<li class="col07"><span class="sum1"></span>元</li>
+		</ul>
+        {% endfor %}
+
+
+	</div>
+	<h3 class="common_title">总金额结算</h3>
+	<div class="common_list_con clearfix">
+		<div class="settle_con">
+			<div class="total_goods_count">共<em id="piece">{{ cart.count }}</em>件商品，总金额<b id="sum">42.60</b>元</div>
+			<div class="transit">运费：<b><span class="yun">10</span>元</b></div>
+			<div class="total_pay">实付款：<b><span class="shi">52.60</span>元</b></div>
+		</div>
+	</div>
+	<div class="order_submit clearfix">
+		<a href="#" id="order_btn">提交订单</a>
+	</div>
+	<div class="popup_con">
+		<div class="popup">
+			<p>订单提交成功！</p>
+		</div>
+		<div class="mask"></div>
+	</div>
+{#    <script type="text/javascript" src="{% static 'D:\Gjango\Fresheveryday\js\jquery-1.12.4.min.js' %}"></script>#}
+	<script type="text/javascript">
+        $('#order_btn').click(function () {
+            ids = []
+            {#value=[]#}
+            $('.goods_list_td').each(function (i, el) {    {#el是购物车已经选中的一条对象，，.点属性即已经选中的对象的属性#}
+                ids.push($(el).attr('data-id'))
+                {#value.push($(this).parent().next().next().next().next().next().find('.num_show').val())#}
+            })
+            {#if(length(ids)==0){alert('无商品可结算')}else{#}
+            $(this).attr('href', '{% url 'user_center_order' %}?ids='+ids.toString())
+         })
+{#        打开网页就执行事件#}
+        window.onload=function () {
+            let sum=$('.col07')
+            var total=0
+            sum.each(function (i, el) {
+                a=$(el).text((Number($(this).parent().find('.col06').text())*Number($(this).parent().find('#co105').text())))
+                total= total+Number(a.text())
+            })
+            $('#sum').text(total.toFixed(2))
+            let shi=$('.shi')
+            shi.text((Number(total)+Number($('.yun').text())).toFixed(2))
+        }
+		$('#order_btn').click(function() {
+			localStorage.setItem('order_finish',2);
+			$('.popup_con').fadeIn('fast', function() {
+				setTimeout(function(){
+					$('.popup_con').fadeOut('fast',function(){
+						window.location.href = '{% url 'user_center_order' %}';
+					});	
+				},3000)
+			});
+		});
+	</script>
+{% endblock content %}

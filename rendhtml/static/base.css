@@ -1,0 +1,75 @@
+body{font-family:'Microsoft Yahei';font-size:12px;color:#666;}
+html,body{height:100%}
+/* 顶部样式 */
+.header_con{
+	background-color:#f7f7f7;
+	height:29px;
+	border-bottom:1px solid #dddddd
+}
+
+.header{
+	width:1200px;
+	height:29px;
+	margin:0 auto;
+}
+
+.welcome,.login_info,.login_btn,.user_link{
+	line-height:29px;
+}
+
+.login_info{
+	display:none;
+}
+
+.login_info em{color:#ff8800}
+
+.login_btn a,.user_link a{
+	color:#666;
+}
+
+.login_btn a:hover,.user_link a:hover{
+	color:#ff8800;
+}
+
+.login_btn span,.user_link span{
+	color:#cecece;
+	margin:0 10px;
+}
+
+
+/* logo、搜索框、购物车样式 */
+
+.search_bar{width:1200px;height:115px;margin:0 auto;}
+.logo{width:150px;height:59px;margin:29px 0 0 17px;}
+
+.search_con{width:616px;height:38px;border:1px solid #37ab40;margin:34px 0 0 124px;background:url(./images/icons.png) 10px -338px no-repeat;}
+.search_con .input_text{width:470px;height:34px;border:0px;margin:2px 0 0 36px;outline:none;font-size:12px;color:#737272;font-family:'Microsoft Yahei'}
+
+.search_con .input_btn{
+	width:100px;height:38px;background-color:#37ab40;border:0px;font-size:14px;color:#fff;font-family:'Microsoft Yahei';outline:none;cursor:pointer;
+}
+
+.guest_cart{
+	width:200px;height:40px;margin-top:34px;
+}
+
+.guest_cart .cart_name{
+	width:158px;height:38px;line-height:38px;border:1px solid #dddddd;display:block;background:url(./images/icons.png) 13px -300px no-repeat;font-size:14px;color:#37ab40;text-indent:56px;
+}
+
+.guest_cart .goods_count{
+	width:40px;height:40px;text-align:center;line-height:40px;font-size:18px;
+	font-weight:bold;color:#fff;background-color:#ff8800;
+}
+
+/* 页面底部样式 */
+.footer{
+	border-top:2px solid #42ad46;
+	margin:30px 0;
+}
+
+.foot_link{text-align:center;margin-top:30px;}
+.foot_link a,.foot_link span{color:#4e4e4e;}
+.foot_link a:hover{color:#ff8800}
+.foot_link span{padding:0 10px}
+.footer p{text-align:center; margin-top:10px;}
