@@ -165,6 +165,7 @@ def list(request):
         cate = ''
     else:
         goods=Goods.objects.all()
+        # goods=Goods.objects.get_queryset().order_by('id')
         recommend=Goods.objects.filter(is_recommend=1)
         cate = ''
     paginator = Paginator(goods,10)
